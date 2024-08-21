@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 
-from courses.models import Course
+from courses.models import Course, Group
 from product import settings
 
 
@@ -36,14 +37,11 @@ class Balance(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='balance',  # Измените на уникальное имя
+        related_name='balance',
         verbose_name='Пользователь'
     )
-    balance = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        verbose_name='Баланс'
-    )
+    balance = models.IntegerField(verbose_name='Баланс', default=10000)  # Используем IntegerField
+
 
     class Meta:
         verbose_name = 'Баланс'
@@ -65,6 +63,14 @@ class Subscription(models.Model):
         on_delete=models.CASCADE,
         related_name='subscriptions',
         verbose_name='Курс'
+    )
+    group = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+        related_name='subscriptions',  # Добавляем это поле в модель Group
+        verbose_name='Группа',
+        null=True,
+        blank=True
     )
     created_at = models.DateTimeField(
         auto_now_add=True,

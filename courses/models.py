@@ -36,7 +36,6 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
-
 class Lesson(models.Model):
     """Модель урока."""
 
@@ -83,10 +82,15 @@ class Group(models.Model):
         verbose_name='Студенты'
     )
 
+    def students_count(self):
+        """Возвращает количество студентов в группе."""
+        return self.students.count()
+
     class Meta:
         verbose_name = 'Группа'
         verbose_name_plural = 'Группы'
         ordering = ('-id',)
+
 
 
 class UserBalance(models.Model):
@@ -116,13 +120,13 @@ class UserProductAccess(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='product_accesses',  # Уникальное имя для обратной связи
+        related_name='product_accesses',  #
         verbose_name='Пользователь'
     )
     course = models.ForeignKey(
         'Course',
         on_delete=models.CASCADE,
-        related_name='user_accesses',  # Уникальное имя для обратной связи
+        related_name='user_accesses',
         verbose_name='Курс'
     )
 
